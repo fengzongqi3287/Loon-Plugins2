@@ -1,0 +1,16 @@
+
+#!name=🧭指南针经纬度与海拔恢复测试
+#!desc=将 Apple Maps 区域配置切换为 US，尝试恢复原生指南针经纬度和海拔，不修改真实 GPS 坐标
+#!author=Custom
+#!homepage=https://github.com/ninjai/apple
+#!version=1.0.0
+
+[URL Rewrite]
+# Apple Maps 区域切换为 US
+(^https?:\/\/gspe\d*-ssl\.ls\.apple\.)(com|cn)(\/.*)(country_code=[A-Z]{2})(.*) $1$2$3country_code=US$5 header
+
+# Apple Maps 环境切换为正式环境
+(^https?:\/\/gspe\d*-ssl\.ls\.apple\.)(com|cn)(\/.*)(environment=[a-z/-]{4,})(.*) $1$2$3environment=prod$5 header
+
+[MITM]
+hostname = gspe35-ssl.ls.apple.com
