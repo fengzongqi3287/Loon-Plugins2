@@ -1,0 +1,18 @@
+
+#!name = 🅷🅾🅽🅶🅶🆄🅾 红果短剧去广告
+#!desc = 红果短剧部分广告拦截，保留抖音商城图片访问
+#!author = LOWERTOP
+#!homepage = https://github.com/LOWERTOP/Shadowrocket-First
+#!icon = https://raw.githubusercontent.com/LOWERTOP/Shadowrocket-First/refs/heads/main/img/hongguo.png
+
+[Rule]
+# 放行抖音商城图片地址
+DOMAIN,p3-ad-sign.byteimg.com,DIRECT
+
+# 红果短剧部分去广告规则
+DOMAIN-WILDCARD,*-misc-lq.fqnovel.com,REJECT
+DOMAIN-WILDCARD,*-reading-ad.qznovelvod.com,REJECT
+DOMAIN-WILDCARD,*-ad-sign.byteimg.com,REJECT
+DOMAIN-WILDCARD,*-iosreadingvideo.qznovelvod.com,REJECT
+DOMAIN-WILDCARD,ads*-normal-l*.zijieapi.com,REJECT
+DOMAIN-SUFFIX,v11-reading-video.qznovelvod.com,REJECT
