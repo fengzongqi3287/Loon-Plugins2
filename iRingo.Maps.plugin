@@ -1,0 +1,50 @@
+#!name = 🗺️ iRingo Maps 国内外兼顾增强版
+#!desc = 基于 iRingo MapKit v4.6.0，保留高德国内地点导航，启用 Apple 地球及全球卫星影像
+#!author = Custom
+#!homepage = https://github.com/NSRingo/MapKit
+#!icon = https://developer.apple.com/assets/elements/icons/maps/maps-128x128.png
+#!tag = iRingo
+#!system = iOS,iPadOS
+#!version = 4.6.0-Custom
+#!system_version = 15
+
+[Argument]
+GeoManifest.Dynamic.Config.CountryCode = select,"CN","AUTO","HK","TW","SG","US","JP","AU","GB","KR","CA","IE",tag=资源清单地区
+UrlInfoSet.Dispatcher = select,"AutoNavi","AUTO","Apple",tag=地点数据服务
+UrlInfoSet.Directions = select,"AutoNavi","AUTO","Apple",tag=导航与ETA服务
+UrlInfoSet.RAP = select,"Apple","AUTO","AutoNavi",tag=评分与照片服务
+UrlInfoSet.LocationShift = select,"AUTO","AutoNavi","Apple",tag=定位漂移修正
+TileSet.Earth = select,"Apple","AUTO","AutoNavi",tag=地球图像
+TileSet.Roads = select,"CN","AUTO","XX",tag=卫星道路与四处看看
+TileSet.Satellite = select,"XX","AUTO","CN",tag=卫星图像
+LogLevel = select,"WARN","OFF","ERROR","INFO","DEBUG","ALL",tag=日志等级
+
+[Rule]
+# 高德地图直连
+DOMAIN-SUFFIX,is.autonavi.com,DIRECT
+
+# Apple 地图服务
+DOMAIN,gspe11-2-cn-ssl.ls.apple.com,DIRECT
+DOMAIN,gspe12-cn-ssl.ls.apple.com,DIRECT
+DOMAIN,gspe19-cn-ssl.ls.apple.com,DIRECT
+DOMAIN,gspe19-2-cn-ssl.ls.apple.com,DIRECT
+DOMAIN,gspe79-cn-ssl.ls.apple.com,DIRECT
+
+[Script]
+# Network Defaults
+http-request ^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults script-path=https://github.com/NSRingo/GeoServices/releases/download/v4.6.0/request.bundle.js, tag=Maps.config.defaults.request, argument=[{GeoManifest.Dynamic.Config.CountryCode},{UrlInfoSet.Dispatcher},{UrlInfoSet.Directions},{UrlInfoSet.RAP},{UrlInfoSet.LocationShift},{TileSet.Earth},{TileSet.Roads},{TileSet.Satellite},{LogLevel}]
+
+http-response ^https?:\/\/configuration\.ls\.apple\.com\/config\/defaults script-path=https://github.com/NSRingo/GeoServices/releases/download/v4.6.0/response.bundle.js, requires-body=1, tag=Maps.config.defaults.response, argument=[{GeoManifest.Dynamic.Config.CountryCode},{UrlInfoSet.Dispatcher},{UrlInfoSet.Directions},{UrlInfoSet.RAP},{UrlInfoSet.LocationShift},{TileSet.Earth},{TileSet.Roads},{TileSet.Satellite},{LogLevel}]
+
+# Announcements
+http-request ^https?:\/\/gspe35-ssl\.ls\.apple\.(com|cn)\/config\/announcements script-path=https://github.com/NSRingo/GeoServices/releases/download/v4.6.0/request.bundle.js, tag=Maps.announcements.request, argument=[{GeoManifest.Dynamic.Config.CountryCode},{UrlInfoSet.Dispatcher},{UrlInfoSet.Directions},{UrlInfoSet.RAP},{UrlInfoSet.LocationShift},{TileSet.Earth},{TileSet.Roads},{TileSet.Satellite},{LogLevel}]
+
+http-response ^https?:\/\/gspe35-ssl\.ls\.apple\.(com|cn)\/config\/announcements script-path=https://github.com/NSRingo/GeoServices/releases/download/v4.6.0/response.bundle.js, requires-body=1, binary-body-mode=1, tag=Maps.announcements.response, argument=[{GeoManifest.Dynamic.Config.CountryCode},{UrlInfoSet.Dispatcher},{UrlInfoSet.Directions},{UrlInfoSet.RAP},{UrlInfoSet.LocationShift},{TileSet.Earth},{TileSet.Roads},{TileSet.Satellite},{LogLevel}]
+
+# Resource Manifest
+http-request ^https?:\/\/gspe35-ssl\.ls\.apple\.(com|cn)\/geo_manifest\/dynamic\/config script-path=https://github.com/NSRingo/GeoServices/releases/download/v4.6.0/request.bundle.js, tag=Maps.geo_manifest.request, argument=[{GeoManifest.Dynamic.Config.CountryCode},{UrlInfoSet.Dispatcher},{UrlInfoSet.Directions},{UrlInfoSet.RAP},{UrlInfoSet.LocationShift},{TileSet.Earth},{TileSet.Roads},{TileSet.Satellite},{LogLevel}]
+
+http-response ^https?:\/\/gspe35-ssl\.ls\.apple\.(com|cn)\/geo_manifest\/dynamic\/config script-path=https://github.com/NSRingo/GeoServices/releases/download/v4.6.0/response.bundle.js, requires-body=1, binary-body-mode=1, tag=Maps.geo_manifest.response, argument=[{GeoManifest.Dynamic.Config.CountryCode},{UrlInfoSet.Dispatcher},{UrlInfoSet.Directions},{UrlInfoSet.RAP},{UrlInfoSet.LocationShift},{TileSet.Earth},{TileSet.Roads},{TileSet.Satellite},{LogLevel}]
+
+[MITM]
+hostname = configuration.ls.apple.com, gspe35-ssl.ls.apple.com
