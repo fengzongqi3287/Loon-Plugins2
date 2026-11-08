@@ -1,0 +1,13 @@
+
+#!name=🧭 Compass 地区检测 CN
+#!desc=将 Apple 网络地区检测结果固定为 CN，配合 Apple Maps US 模块测试原生指南针经纬度与海拔
+#!author=Custom
+#!homepage=https://github.com/ninjai/apple
+#!version=1.0.0
+
+[Rewrite]
+# Apple 网络地区检测返回 CN
+^https?:\/\/gspe1-ssl\.ls\.apple\.(?:com|cn)\/pep\/gcc mock-response-body data="CN" data-type=text status-code=200
+
+[MITM]
+hostname = gspe1-ssl.ls.apple.com, gspe1-ssl.ls.apple.cn
